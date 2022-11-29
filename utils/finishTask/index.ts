@@ -1,8 +1,8 @@
 import { Task } from '../../types/task'
 
-export const finishTask = (tasks: Task[], indexToFinish: number) => {
-  return tasks.map((task, i) => {
-    if (i === indexToFinish) {
+export const finishTask = (tasks: Task[], idToFinish: string) => {
+  return tasks.map((task) => {
+    if (task.id === idToFinish) {
       return {
         ...task,
         done: !task.done,

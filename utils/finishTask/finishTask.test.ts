@@ -24,6 +24,6 @@ const tasks = [
 describe('removeTask', () => {
   it('Should return array with all tasks except the removed one', () => {
     const expected = [tasks[0], { ...tasks[1], done: true }, tasks[2]]
-    expect(finishTask(tasks, 1)).toEqual(expected)
+    expect(finishTask(tasks, '2')).toEqual(expected)
   })
 })

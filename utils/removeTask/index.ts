@@ -1,5 +1,5 @@
 import { Task } from '../../types/task'
 
-export const removeTask = (tasks: Task[], indexToRemove: number) => {
-  return tasks.filter((todo, i) => i !== indexToRemove)
+export const removeTask = (tasks: Task[], idToRemove: string) => {
+  return tasks.filter((task) => task.id !== idToRemove)
 }

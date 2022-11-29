@@ -25,12 +25,12 @@ export default function App() {
     setTasks((prev) => createTask(prev, newTask))
   }
 
-  const handleDeleteTask = (index: number) => {
-    setTasks((prev) => removeTask(prev, index))
+  const handleDeleteTask = (id: string) => {
+    setTasks((prev) => removeTask(prev, id))
   }
 
-  const handleFinishTask = (index: number) => {
-    setTasks((prev) => finishTask(prev, index))
+  const handleFinishTask = (id: string) => {
+    setTasks((prev) => finishTask(prev, id))
   }
 
   return (

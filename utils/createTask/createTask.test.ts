@@ -24,6 +24,6 @@ describe('removeTask', () => {
       done: false,
     }
     const expected = [tasks[0], tasks[1], newTask]
-    expect(createTask(newTask, 1)).toEqual(expected)
+    expect(createTask(tasks, newTask)).toEqual(expected)
   })
 })
