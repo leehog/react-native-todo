@@ -1,79 +1,65 @@
-import { TodoList } from './components/templates/todoList'
-import { TodoModal } from './components/templates/todoModal'
+import { TaskList } from './components/templates/taskList'
+import { TaskModal } from './components/templates/taskModal'
 import { theme } from './theme'
-import { Todo } from './types/todo'
+import { Task } from './types/task'
+import { createTask } from './utils/createTask'
+import { finishTask } from './utils/finishTask'
+import { removeTask } from './utils/removeTask'
 import { Feather } from '@expo/vector-icons'
 import {
   NativeBaseProvider,
-  View,
   Heading,
   Box,
   Flex,
   IconButton,
   Icon,
+  ScrollView,
 } from 'native-base'
 import { useState } from 'react'
-import uuid from 'react-native-uuid'
 
 export default function App() {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [showAddTodo, setShowAddTodo] = useState(false)
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [showAddTask, setShowAddTask] = useState(false)
 
-  const handleCreateTodo = (newTodo: Todo) => {
-    console.log('Submit')
-    setTodos((prev) =>
-      prev.concat({
-        ...newTodo,
-        id: uuid.v4().toString(),
-      })
-    )
+  const handleCreateTodo = (newTask: Task) => {
+    setTasks((prev) => createTask(prev, newTask))
   }
 
   const handleDeleteTask = (index: number) => {
-    setTodos((prev) => prev.filter((todo, i) => i !== index))
+    setTasks((prev) => removeTask(prev, index))
   }
 
   const handleFinishTask = (index: number) => {
-    setTodos((prev) =>
-      prev.map((todo, i) => {
-        if (i === index) {
-          return {
-            ...todo,
-            done: !todo.done,
-          }
-        }
-        return todo
-      })
-    )
+    setTasks((prev) => finishTask(prev, index))
   }
 
   return (
     <NativeBaseProvider theme={theme}>
-      <View>
+      <ScrollView>
         <Box height={'100%'} paddingY={10} paddingX={4}>
           <Flex justifyContent={'space-between'} direction={'row'} mb={4}>
             <Heading fontSize={'3xl'} color={'emerald.400'}>
-              Todo app
+              Task list ({tasks.length})
             </Heading>
             <IconButton
               borderRadius='sm'
               variant='solid'
               icon={<Icon as={Feather} name='plus' size='sm' color={'black'} />}
-              onPress={() => setShowAddTodo(true)}
+              onPress={() => setShowAddTask(true)}
             />
           </Flex>
-          <TodoModal
+          <TaskModal
             handleSubmit={handleCreateTodo}
-            open={showAddTodo}
-            close={() => setShowAddTodo(false)}
+            open={showAddTask}
+            close={() => setShowAddTask(false)}
           />
-          <TodoList
-            todos={todos}
+          <TaskList
+            tasks={tasks}
             finishTask={handleFinishTask}
             deleteTask={handleDeleteTask}
           />
         </Box>
-      </View>
+      </ScrollView>
     </NativeBaseProvider>
   )
 }

@@ -1,9 +1,10 @@
-import { Todo } from '../../types/todo'
+import { Task } from '../../types/task'
 import { Button, FormControl, Input, Modal, TextArea } from 'native-base'
 import { useState } from 'react'
+import uuid from 'react-native-uuid'
 
 interface Props {
-  handleSubmit: (todo: Todo) => void
+  handleSubmit: (task: Task) => void
   open: boolean
   close: () => void
 }
@@ -15,17 +16,17 @@ const INITIAL_STATE = {
   id: '',
 }
 
-export const TodoModal = ({ handleSubmit, open, close }: Props) => {
-  const [newTodo, setNewTodo] = useState<Todo>(INITIAL_STATE)
+export const TaskModal = ({ handleSubmit, open, close }: Props) => {
+  const [newTask, setNewTask] = useState<Task>(INITIAL_STATE)
 
   const createTodo = () => {
-    handleSubmit(newTodo)
-    setNewTodo(INITIAL_STATE)
+    handleSubmit({ ...newTask, id: uuid.v4().toString() })
+    setNewTask(INITIAL_STATE)
     close()
   }
 
   const handleChange = (key: string, value: string) => {
-    setNewTodo((prev) => ({
+    setNewTask((prev) => ({
       ...prev,
       [key]: value,
     }))
@@ -42,16 +43,16 @@ export const TodoModal = ({ handleSubmit, open, close }: Props) => {
             isRequired={true}
             variant='rounded'
             placeholder='Name of your task'
-            value={newTodo.title}
+            value={newTask.title}
             onChangeText={(value) => handleChange('title', value)}
           />
           <FormControl.Label>Description</FormControl.Label>
           <TextArea
             isRequired={true}
-            autoCompleteType={false}
+            autoCompleteType
             h={20}
             placeholder='Describe your task'
-            value={newTodo.description}
+            value={newTask.description}
             onChangeText={(value) => handleChange('description', value)}
           />
         </Modal.Body>

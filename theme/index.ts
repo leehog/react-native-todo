@@ -5,16 +5,17 @@ export const theme = extendTheme({
     Button: {
       defaultProps: {
         backgroundColor: 'emerald.300',
-        colorScheme: 'blueGray',
-      },
-      baseStyle: {
-        color: 'black',
       },
     },
     IconButton: {
       defaultProps: {
         backgroundColor: 'emerald.300',
         colorScheme: 'black',
+      },
+    },
+    Icon: {
+      baseStyle: {
+        color: 'black',
       },
     },
   },
