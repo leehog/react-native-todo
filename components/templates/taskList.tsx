@@ -4,8 +4,8 @@ import { VStack } from 'native-base'
 
 interface Props {
   tasks: Task[]
-  finishTask: (id: string) => void
-  deleteTask: (id: string) => void
+  finishTask: (id: string) => Promise<void>
+  deleteTask: (id: string) => Promise<void>
 }
 
 export const TaskList = ({ tasks, finishTask, deleteTask }: Props) => {
@@ -15,8 +15,8 @@ export const TaskList = ({ tasks, finishTask, deleteTask }: Props) => {
         <TaskItem
           key={task.id}
           task={task}
-          finishTask={() => finishTask(task.id)}
-          deleteTask={() => deleteTask(task.id)}
+          finishTask={async () => await finishTask(task.id)}
+          deleteTask={async () => await deleteTask(task.id)}
         />
       ))}
     </VStack>

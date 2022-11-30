@@ -1,5 +1,6 @@
 import { TaskList } from './components/templates/taskList'
 import { TaskModal } from './components/templates/taskModal'
+import { useTaskStorage } from './hooks/useTaskStorage'
 import { theme } from './theme'
 import { Task } from './types/task'
 import { createTask } from './utils/createTask'
@@ -15,23 +16,59 @@ import {
   Icon,
   ScrollView,
 } from 'native-base'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [showAddTask, setShowAddTask] = useState(false)
+  const { savedTasks, updateStoredTasks } = useTaskStorage()
 
-  const handleCreateTodo = (newTask: Task) => {
-    setTasks((prev) => createTask(prev, newTask))
-  }
+  useEffect(() => {
+    console.log('Running saved tasks')
+    if (savedTasks.length && tasks.length === 0) {
+      console.log('Setting saved tasks')
+      setTasks(savedTasks)
+    }
+  }, [savedTasks, tasks])
 
-  const handleDeleteTask = (id: string) => {
-    setTasks((prev) => removeTask(prev, id))
-  }
+  const handleCreateTask = useCallback(
+    async (newTask: Task) => {
+      try {
+        const updatedTasks = createTask(tasks, newTask)
+        setTasks(updatedTasks)
+        await updateStoredTasks(updatedTasks)
+      } catch (e) {
+        console.log('Error in create task: ', e)
+      }
+    },
+    [tasks]
+  )
 
-  const handleFinishTask = (id: string) => {
-    setTasks((prev) => finishTask(prev, id))
-  }
+  const handleDeleteTask = useCallback(
+    async (id: string) => {
+      try {
+        const updatedTasks = removeTask(tasks, id)
+        setTasks(updatedTasks)
+        await updateStoredTasks(updatedTasks)
+      } catch (e) {
+        console.log('Error in delete task: ', e)
+      }
+    },
+    [tasks]
+  )
+
+  const handleFinishTask = useCallback(
+    async (id: string) => {
+      try {
+        const updatedTasks = finishTask(tasks, id)
+        setTasks(updatedTasks)
+        await updateStoredTasks(updatedTasks)
+      } catch (e) {
+        console.log('Error in finish task: ', e)
+      }
+    },
+    [tasks]
+  )
 
   return (
     <NativeBaseProvider theme={theme}>
@@ -49,7 +86,7 @@ export default function App() {
             />
           </Flex>
           <TaskModal
-            handleSubmit={handleCreateTodo}
+            handleSubmit={handleCreateTask}
             open={showAddTask}
             close={() => setShowAddTask(false)}
           />

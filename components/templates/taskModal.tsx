@@ -4,7 +4,7 @@ import { useState } from 'react'
 import uuid from 'react-native-uuid'
 
 interface Props {
-  handleSubmit: (task: Task) => void
+  handleSubmit: (task: Task) => Promise<void>
   open: boolean
   close: () => void
 }
